@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="text-center">Employee Dashboard</h2>
+      <h3>Welcome, {{ employee.name }}</h3>
+
+      <!-- Popup Notification -->
+      {% if messages %}
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {% for message in messages %} {{ message }} {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endif %}
+
+      <!-- Employee Information Section -->
+      <div class="mt-4">
+        <ul class="list-unstyled">
+          <li><strong>Name:</strong> {{ employee.name }}</li>
+          <li><strong>Email:</strong> {{ employee.email }}</li>
+          <li><strong>Salary:</strong> {{ employee.salary }}</li>
+          <li><strong>Category:</strong> {{ employee.category }}</li>
+          <li><strong>Phone Number:</strong> {{ employee.phone_number }}</li>
+          <li><strong>Address:</strong> {{ employee.address }}</li>
+        </ul>
+      </div>
+
+      <!-- Work Submission Section -->
+      <div class="mt-4">
+        <h4><strong>Work Status</strong></h4>
+        <form
+          id="workStatusForm"
+          method="POST"
+          enctype="multipart/form-data"
+          action="{% url 'update_employee_work_status' employee.id %}"
+        >
+          {% csrf_token %}
+          <!-- Work Completed Radio Buttons -->
+          <div class="form-group">
+            <label for="work_assigned"
+              ><strong>Is the Work Completed?</strong></label
+            ><br />
+            <label>
+              <input
+                type="radio"
+                name="work_assigned"
+                value="True"
+                {%
+                if
+                employee.work_assigned
+                %}checked{%
+                endif
+                %}
+              />
+              Yes
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="work_assigned"
+                value="False"
+                {%
+                if
+                not
+                employee.work_assigned
+                %}checked{%
+                endif
+                %}
+              />
+              No
+            </label>
+          </div>
+
+          <!-- Work Description -->
+          <div class="form-group mt-3">
+            <label for="work_description"
+              ><strong>Work Description:</strong></label
+            >
+            <textarea name="work_description" class="form-control">
+{{ employee.work_description }}</textarea
+            >
+          </div>
+
+          <!-- File Upload -->
+          <div class="form-group mt-3">
+            <label for="work_file"
+              ><strong>Upload Work File (Optional):</strong></label
+            >
+            <input type="file" name="work_file" class="form-control" />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary mt-3">
+            Submit Work
+          </button>
+        </form>
+      </div>
+
+      <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Logout</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
